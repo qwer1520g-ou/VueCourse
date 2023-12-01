@@ -2,26 +2,40 @@
 import { defineProps, defineEmits } from "vue"
 
 defineProps({
-  book: {
+  todo: {
     type: Object,
     required: true,
   },
 })
 
-const emits = defineEmits(["remove-book"])
+const emits = defineEmits(["remove-todo","toggle-completed"])
 
-const removeBook = (e) => {
+const removeTodo = (e) => {
   const btn = e.currentTarget
-  const id = btn?.dataset.bookid
+  const id = btn?.dataset.todoid
   if (id) {
-    emits("remove-book", id)
+    emits("remove-todo", id)
   }
+}
+const toggleCompleted = (e) => {
+  const toggle_btn = e.currentTarget
+  const toggle_id = toggle_btn?.dataset.todoid
+  console.log(toggle_id);
+  emits("toggle-completed", toggle_id)
 }
 </script>
 
 <template>
   <li class="flex items-center gap-2 text-2xl">
-    <button :data-bookid="book.id" @click="removeBook" class="btn btn-xs">
+    <input
+      type="checkbox"
+      :checked="todo.completed"
+      @change="toggleCompleted"
+      class="form-checkbox"
+      :data-todoid="todo.id"
+    />
+    <span :class="{ 'line-through': todo.completed }">{{ todo.title }}</span>
+    <button :data-todoid="todo.id" @click="removeTodo" class="btn btn-xs">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1em"
@@ -32,8 +46,6 @@ const removeBook = (e) => {
         />
       </svg>
     </button>
-    <router-link :to="{ name: 'detail', params: { auo: book.id } }">
-      {{ book.title }}
-    </router-link>
+
   </li>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <!-- <nav>
     <ul class="flex gap-3">
       <li>
         <router-link to="/" class="text-xl underline">首頁</router-link>
@@ -13,7 +13,7 @@
         >
       </li>
     </ul>
-  </nav>
+  </nav> -->
   <main>
     <router-view></router-view>
   </main>

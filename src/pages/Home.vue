@@ -1,43 +1,55 @@
 <script setup>
 import { v4 as uuid } from "uuid"
-import { getBooks, saveBooks } from "@/auo-lib/storage"
+import { getTodos, saveTodos } from "@/auo-lib/storage"
 import { reactive, onBeforeMount } from "vue"
 import Header from "@/components/infomation/Header.vue"
-import BookItem from "@/components/books/Item.vue"
-import AddBookForm from "@/components/forms/AddBook.vue"
+import TodoItem from "@/components/todos/Item.vue"
+import AddTodoForm from "@/components/forms/AddTodo.vue"
 
-const title = "AUO 圖書管理系統"
-const books = reactive([])
+const title = "TodoList"
+const todos = reactive([])
 
-const removeBook = (id) => {
+const removeTodo = (id) => {
   if (id) {
-    const bookIndex = books.findIndex((book) => book.id == id)
+    const todoIndex = todos.findIndex((todo) => todo.id == id)
 
-    if (bookIndex >= 0) {
-      books.splice(bookIndex, 1)
-      saveBooks(books)
+    if (todoIndex >= 0) {
+      todos.splice(todoIndex, 1)
+      saveTodos(todos)
     }
   }
 }
 
-const addBook = (bookName) => {
-  if (bookName != "") {
-    const book = {
+const addTodo = (todoName) => {
+  if (todoName != "") {
+    const todo = {
       id: uuid(),
-      title: bookName,
+      title: todoName,
     }
 
-    books.unshift(book)
+    todos.unshift(todo)
 
     // save
-    saveBooks(books)
+    saveTodos(todos)
+  }
+}
+const toggleCompleted = (id) => {
+  console.log(id);
+  if (id) {
+    const todoIndex = todos.findIndex((todo) => todo.id == id)
+
+    if (todoIndex >= 0) {
+      todos[todoIndex].completed = !todos[todoIndex].completed
+      saveTodos(todos)
+    }
   }
 }
 
 onBeforeMount(() => {
-  const data = getBooks()
+  const data = getTodos()
+  
   if (data) {
-    books.push(...data)
+    todos.push(...data)
   }
 })
 </script>
@@ -45,13 +57,18 @@ onBeforeMount(() => {
 <template>
   <h1 class="title">{{ title }}</h1>
 
-  <AddBookForm @add-book="addBook" />
+  <AddTodoForm @add-todo="addTodo" />
 
   <div class="divider"></div>
   <div>
-    <Header :books="books" />
+    <Header :todos="todos" />
     <ul>
-      <BookItem @remove-book="removeBook" v-for="book in books" :book="book" />
+      <TodoItem
+        @remove-todo="removeTodo"
+        @toggle-completed="toggleCompleted"
+        v-for="todo in todos"
+        :todo="todo"
+      />
     </ul>
   </div>
 </template>

@@ -1,16 +1,17 @@
-const STORAGE_NAME = "auo-book"
+const STORAGE_NAME = "auo-todolist"
 
-const getBooks = () => {
+const getTodos = () => {
   return JSON.parse(localStorage.getItem(STORAGE_NAME))
 }
 
-const saveBooks = (books) => {
-  localStorage.setItem(STORAGE_NAME, JSON.stringify(books))
+const saveTodos = (todos) => {
+  console.log(todos);
+  localStorage.setItem(STORAGE_NAME, JSON.stringify(todos))
 }
 
-const getBook = (id) => {
-  const books = getBooks()
-  return books.find((book) => book.id == id)
-}
+// const getBook = (id) => {
+//   const books = getTodos()
+//   return books.find((book) => book.id == id)
+// }
 
-export { getBooks, saveBooks, getBook }
+export { getTodos, saveTodos }
